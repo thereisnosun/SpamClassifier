@@ -56,13 +56,23 @@ def getFeatures(file_data):
     return features
 
 
-def scanFiles():
+def getFeaturesMatrix():
+    features_matrix = []
+    count = 0
     for (dirpath, dirnames, filenames) in os.walk(DATA_DIR):
         for file in filenames:
             full_path = os.path.join(dirpath, file)
             with codecs.open(full_path, 'r', encoding='"ISO-8859-1') as filehandle:
                 file_data = filehandle.read()
                 feature_vec = getFeatures(file_data)
+                count += 1
+                if not feature_vec:
+                    continue
+                features_matrix.append(feature_vec)
+
+    np_features = np.array(features_matrix)
+    print(type(np_features), np_features.shape, type(np_features[0]))
+    return np_features
 
 
 
@@ -73,7 +83,7 @@ def scanFiles():
 
 def main():
     print("Starting the classifier...")
-    scanFiles()
+    features_matrix = getFeaturesMatrix()
 
 
 if __name__ == "__main__":
